@@ -4,7 +4,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             image: 'node:13.7.0-stretch',
             ttyEnabled: true,
             resourceLimitCpu: '1000m',
-            resourceLimitMemory: '768Mi',
+            resourceLimitMemory: '1500Mi',
             resourceRequestCpu: '250m',
             resourceRequestMemory: '256Mi',
             command: 'cat',
