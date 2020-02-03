@@ -28,7 +28,6 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   export CHROME_BIN=chromium
                   apt-get update
                   apt-get install -y chromium
-                  cd spring-petclinic-angular
                   npm uninstall -g angular-cli @angular/cli
                   npm cache clean --force
                   npm install -g @angular/cli@latest
