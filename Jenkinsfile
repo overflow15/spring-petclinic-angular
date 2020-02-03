@@ -1,7 +1,7 @@
 podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConnectTimeout: '600', containers: [
     containerTemplate(
             name: 'npm',
-            image: 'node:12.14.1-alpine3.9',
+            image: 'node:13.7.0-stretch',
             ttyEnabled: true,
             resourceLimitCpu: '1000m',
             resourceLimitMemory: '768Mi',
