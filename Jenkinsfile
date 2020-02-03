@@ -24,7 +24,6 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             container('npm') {
               stage('Unit tests') {
                   sh '''#!/bin/bash
-                  sleep 300
                   export NG_CLI_ANALYTICS=ci
                   export CHROME_BIN=chromium
                   apt-get update
