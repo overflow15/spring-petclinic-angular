@@ -25,6 +25,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               stage('Unit tests') {
                   sh '''#!/bin/bash
                   export NG_CLI_ANALYTICS=ci
+                  export CHROME_BIN=chromium
                   apt-get update
                   apt-get install -y chromium
                   cd spring-petclinic-angular
