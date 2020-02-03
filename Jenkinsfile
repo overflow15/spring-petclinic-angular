@@ -44,3 +44,5 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               }
             }
         }
+    }
+}
