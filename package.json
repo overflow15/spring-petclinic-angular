@@ -2,6 +2,9 @@
   "name": "spring-petclinic-angular",
   "version": "8.0.1",
   "license": "MIT",
+  "publishConfig": {
+    "registry": "http://nexus.eks.minlab.com:8081/repository/npm-private/"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,7 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": false,
+  "private": true,
   "dependencies": {
     "@angular/animations": "8.0.1",
     "@angular/cdk": "8.0.1",
