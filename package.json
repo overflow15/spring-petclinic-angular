@@ -8,7 +8,8 @@
     "build": "ng build",
     "test": "ng test --browsers ChromeHeadlessCI --code-coverage=true",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "sonar": "sonar-scanner"
   },
   "private": false,
   "dependencies": {
