@@ -1,5 +1,9 @@
 {
-  "extends": "tslint:recommended",
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-sonarts"
+  ],
   "rules": {
     "array-type": false,
     "arrow-parens": false,
