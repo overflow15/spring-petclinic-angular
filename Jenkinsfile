@@ -39,7 +39,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               stage('Compiling') {
                   sh '''#!/bin/bash
                   ng build
-                  npm publish --registry http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus-sonatype-nexus:8080/repository/npm
+                  npm publish --registry http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus-sonatype-nexus-new:8081/repository/npm
                   '''
               }
             }
