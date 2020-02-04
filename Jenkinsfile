@@ -46,6 +46,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   npm install tslint typescript --save-dev
                   tslint --init
                   npm install tslint-sonarts --save-dev
+                  npm install sonar-scanner
                   npm run sonar
                   '''
               }
