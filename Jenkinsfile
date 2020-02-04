@@ -36,10 +36,17 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   npm test
                   '''
               }
-              stage('Compiling') {
+              stage('Publishing to Nexus') {
                   sh '''#!/bin/bash
-                  ng build
                   npm publish --registry http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus-sonatype-nexus-new:8081/repository/npm
+                  '''
+              }
+              stage('Sonar') {
+                  sh '''#!/bin/bash
+                  npm install tslint typescript --save-dev
+                  tslint --init
+                  npm install tslint-sonarts --save-dev
+                  npm run sonar
                   '''
               }
             }
