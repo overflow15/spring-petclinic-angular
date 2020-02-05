@@ -45,8 +45,6 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''#!/bin/bash
                   #sed -i "s/application_name/$(grep "name" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
                   #sed -i "s/application_version/$(grep "version" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
-                  sed -i "s/application_name/spring-petclinic-angular/g" sonar-project.properties
-                  sed -i "s/application_name/8.0.1/g" sonar-project.properties
                   npm install -D sonarqube-scanner
                   npm run sonar
                   '''
