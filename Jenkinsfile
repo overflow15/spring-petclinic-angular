@@ -14,6 +14,22 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                 secretEnvVar(key: 'SONAR_PASS', secretName: 'sonar-petclinic', secretKey: 'password'),
                 secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
             ]
+    ),
+    containerTemplate(
+            name: 'python',
+            image: 'python:3.7.6-alpine3.10',
+            ttyEnabled: true,
+            command: 'cat',
+            resourceLimitCpu: '400m',
+            resourceLimitMemory: '512Mi',
+            resourceRequestCpu: '200m',
+            resourceRequestMemory: '256Mi',
+            privileged: true,
+            envVars: [
+                secretEnvVar(key: 'SONAR_URL', secretName: 'sonar-petclinic', secretKey: 'url'),
+                secretEnvVar(key: 'SONAR_USER', secretName: 'sonar-petclinic', secretKey: 'username'),
+                secretEnvVar(key: 'SONAR_PASS', secretName: 'sonar-petclinic', secretKey: 'password'),
+            ]
     )
     ]
 )
@@ -47,6 +63,20 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   #sed -i "s/application_version/$(grep "version" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
                   npm install -D sonarqube-scanner
                   npm run sonar
+                  '''
+              }
+            }
+        }
+        stage('Send Sonar data to InfluxDB') {
+            container('python') {
+              stage('Send Sonar data to InfluxDB') {
+                  sh '''
+                  python3 -m pip install influxdb
+                  cd /tmp && git clone https://github.com/overflow15/sonarqube-influxdb.git
+                  sed -i "s/sonarURL=/sonarURL=$(SONAR_URL)/g"
+                  sed -i "s/sonarUser=/sonarUser=$(SONAR_USER)/g"
+                  sed -i "s/sonarCredentials=/sonarCredentials=$(SONAR_PASS)/g"
+                  python /tmp/sonarqube-influxdb/qamera.py /tmp/sonarqube-influxdb/python/application.properties spring-petclinic-angular
                   '''
               }
             }
