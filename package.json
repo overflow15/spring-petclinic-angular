@@ -9,7 +9,7 @@
     "test": "ng test --browsers ChromeHeadlessCI --code-coverage=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sonar": "sonar-scanner"
+    "sonar": "sonar-scanner -Dsonar.password=$SONAR_PASS -Dsonar.login=$SONAR_USER"
   },
   "private": false,
   "dependencies": {
