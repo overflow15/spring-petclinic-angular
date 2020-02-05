@@ -75,9 +75,8 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   apk --update add git less openssh
                   cd /tmp && git clone https://github.com/overflow15/sonarqube-influxdb.git
                   cd sonarqube-influxdb
-                  sed -i "s/sonarURL=/sonarURL=$SONAR_URL/g" application.properties
-                  sed -i "s/sonarUser=/sonarUser=$SONAR_USER/g" application.properties
-                  sed -i "s/sonarCredentials=/sonarCredentials=$SONAR_PASS/g" application.properties
+                  echo "sonarUser="$SONAR_USER >> application.properties
+                  echo "sonarCredentials="$SONAR_PASS >> application.properties
                   python /tmp/sonarqube-influxdb/qamera.py /tmp/sonarqube-influxdb/python/application.properties spring-petclinic-angular
                   '''
               }
