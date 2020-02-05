@@ -43,10 +43,10 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               }
               stage('Sonar') {
                   sh '''#!/bin/bash
-                  applicationName=$(grep "name" package.json | awk -F\" '{print $4}')
-                  applicationVersion=$(grep "version" package.json | awk -F\" '{print $4}')
-                  sed -i "s/application_name/$applicationName/g" sonar-project.properties
-                  sed -i "s/application_version/$applicationVersion/g" sonar-project.properties
+                  #sed -i "s/application_name/$(grep "name" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
+                  #sed -i "s/application_version/$(grep "version" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
+                  sed -i "s/application_name/spring-petclinic-angular/g" sonar-project.properties
+                  sed -i "s/application_name/8.0.1/g" sonar-project.properties
                   npm install -D sonarqube-scanner
                   npm run sonar
                   '''
