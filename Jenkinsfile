@@ -72,6 +72,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               stage('Send Sonar data to InfluxDB') {
                   sh '''
                   python3 -m pip install influxdb
+                  apk --update add git less openssh
                   cd /tmp && git clone https://github.com/overflow15/sonarqube-influxdb.git
                   sed -i "s/sonarURL=/sonarURL=$(SONAR_URL)/g"
                   sed -i "s/sonarUser=/sonarUser=$(SONAR_USER)/g"
