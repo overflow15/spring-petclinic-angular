@@ -77,7 +77,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   cd sonarqube-influxdb
                   echo "sonarUser="$SONAR_USER >> application.properties
                   echo "sonarCredentials="$SONAR_PASS >> application.properties
-                  python /tmp/sonarqube-influxdb/qamera.py /tmp/sonarqube-influxdb/python/application.properties spring-petclinic-angular
+                  python ./qamera.py ./application.properties spring-petclinic-angular
                   '''
               }
             }
