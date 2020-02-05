@@ -43,10 +43,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               }
               stage('Sonar') {
                   sh '''#!/bin/bash
-                  npm install tslint typescript --save-dev
-                  tslint --init
-                  npm install tslint-sonarts --save-dev
-                  npm install sonar-scanner
+                  npm install -D sonarqube-scanner
                   npm run sonar
                   '''
               }
