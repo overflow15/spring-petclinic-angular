@@ -42,7 +42,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             privileged: true,
             envVars: [
                 secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password'),
-                EnvVar(key: 'DOCKER_OPTS', value: '--insecure-registry=my.docker.registry')
+                envVar(key: 'DOCKER_OPTS', value: '--insecure-registry=my.docker.registry')
             ]
     )
     ]
