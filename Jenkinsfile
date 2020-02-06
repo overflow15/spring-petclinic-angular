@@ -33,7 +33,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
     ),
     containerTemplate(
             name: 'docker',
-            image: 'docker:18.09.7-dind',
+            image: 'lordgaav/dind-options',
             ttyEnabled: true,
             resourceLimitCpu: '400m',
             resourceLimitMemory: '512Mi',
