@@ -2,9 +2,7 @@
   "name": "spring-petclinic-angular",
   "version": "8.0.1",
   "license": "MIT",
-  "files": [
-  "dist/"
-  ]
+  "files": ["dist/"]
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
