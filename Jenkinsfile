@@ -110,7 +110,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''
                   tag_nexus=$(date +%s) && docker tag petclinic_front:latest docker.eks.minlab.com/repository/docker-registry/petclinic_front:${tag_nexus}
                   docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
-                  docker push docker.eks.minlab.com/repository/docker-registry/petclinic:${tag_nexus}
+                  docker push docker.eks.minlab.com/repository/docker-registry/petclinic_front:${tag_nexus}
                   '''
               }
             }
