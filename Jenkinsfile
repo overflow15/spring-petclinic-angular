@@ -30,6 +30,19 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                 secretEnvVar(key: 'SONAR_USER', secretName: 'sonar-petclinic', secretKey: 'username'),
                 secretEnvVar(key: 'SONAR_PASS', secretName: 'sonar-petclinic', secretKey: 'password'),
             ]
+    ),
+    containerTemplate(
+            name: 'docker',
+            image: 'docker:18.09.7-dind',
+            ttyEnabled: true,
+            resourceLimitCpu: '400m',
+            resourceLimitMemory: '512Mi',
+            resourceRequestCpu: '200m',
+            resourceRequestMemory: '256Mi',
+            privileged: true,
+            envVars: [
+                secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
+            ]
     )
     ]
 )
@@ -78,6 +91,20 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   echo "sonarUser="$SONAR_USER >> python/application.properties
                   echo "sonarCredentials="$SONAR_PASS >> python/application.properties
                   python python/qamera.py python/application.properties spring-petclinic-angular
+                  '''
+              }
+            }
+        }
+        stage('DinD') {
+            container('docker') {
+              stage('Docker Build') {
+                  sh 'docker build -t petclinic:latest .'
+              }
+              stage('Docker tag and push') {
+                  sh '''
+                  tag_nexus=$(date +%s) && docker tag petclinic_front:latest docker.eks.minlab.com/repository/docker-registry/petclinic_front:${tag_nexus}
+                  docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
+                  docker push docker.eks.minlab.com/repository/docker-registry/petclinic:${tag_nexus}
                   '''
               }
             }
