@@ -40,7 +40,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             resourceRequestCpu: '200m',
             resourceRequestMemory: '256Mi',
             privileged: true,
-            command: ["--insecure-registry=docker.eks.minlab.com"]
+            command: ["--insecure-registry=docker.eks.minlab.com"],
             envVars: [
                 secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
             ]
