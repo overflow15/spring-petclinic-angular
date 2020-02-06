@@ -98,7 +98,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
         stage('DinD') {
             container('docker') {
               stage('Docker Build') {
-                  sh 'docker build -t petclinic:latest .'
+                  sh 'docker build -t petclinic_front:latest .'
               }
               stage('Docker tag and push') {
                   sh '''
