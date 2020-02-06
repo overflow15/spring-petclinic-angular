@@ -98,7 +98,13 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
         stage('DinD') {
             container('docker') {
               stage('Docker Build') {
-                  sh 'docker build -t petclinic_front:latest .'
+                  sh '''
+                  apk --update add curl
+                  curl http://admin:$NEXUS_ADMIN_PASS@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/spring-petclinic-angular-8.0.1.tgz --output spring-petclinic-angular-8.0.1.tgz
+                  sleep 300
+                  docker build -t petclinic_front:latest .
+                  
+                  '''
               }
               stage('Docker tag and push') {
                   sh '''
