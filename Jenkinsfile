@@ -102,7 +102,6 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''
                   apk --update add curl
                   http://admin:$NEXUS_ADMIN_PASS@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/spring-petclinic-angular-8.0.1.tgz --output spring-petclinic-angular-8.0.1.tgz
-                  sleep 300
                   docker build -t petclinic_front:latest .
                   '''
               }
