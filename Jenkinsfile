@@ -44,6 +44,19 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                 secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password'),
                 envVar(key: 'DOCKER_OPTS', value: '--insecure-registry=docker.eks.minlab.com')
             ]
+    ),
+    containerTemplate(
+            name: 'helm',
+            image: 'dtzar/helm-kubectl:2.16.0',
+            ttyEnabled: true,
+            command: 'cat',
+            resourceLimitCpu: '400m',
+            resourceLimitMemory: '512Mi',
+            resourceRequestCpu: '200m',
+            resourceRequestMemory: '256Mi',
+            envVars: [
+                secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
+            ]
     )
     ]
 )
