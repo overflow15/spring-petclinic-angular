@@ -104,15 +104,15 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   apk --update add curl
                   appName=$(grep "name" package.json | awk -F\" '{print $4}')
                   appVersion=$(grep "version" package.json | awk -F\" '{print $4}')
-                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/${appName}-${appVersion}.tgz --output ${appName}-${appVersion}.tgz
+                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/$(grep "name" package.json | awk -F\" '{print $4}')/-/$(grep "name" package.json | awk -F\" '{print $4}')-$(grep "version" package.json | awk -F\" '{print $4}').tgz --output $(grep "name" package.json | awk -F\" '{print $4}')-$(grep "version" package.json | awk -F\" '{print $4}').tgz
                   docker build -t ${appName}:latest .
                   '''
               }
               stage('Docker tag and push') {
                   sh '''
-                  tag_nexus=$(date +%s) && docker tag ${appName}:latest docker.eks.minlab.com/repository/docker-registry/${appName}:${tag_nexus}
+                  tag_nexus=$(date +%s) && docker tag $(grep "name" package.json | awk -F\" '{print $4}'):latest docker.eks.minlab.com/repository/docker-registry/$(grep "name" package.json | awk -F\" '{print $4}'):${tag_nexus}
                   docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
-                  docker push docker.eks.minlab.com/repository/docker-registry/${appName}:${tag_nexus}
+                  docker push docker.eks.minlab.com/repository/docker-registry/$(grep "name" package.json | awk -F\" '{print $4}'):${tag_nexus}
                   '''
               }
             }
