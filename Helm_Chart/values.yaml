@@ -1,0 +1,49 @@
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  enabled: true
+  apiVersion: "v1"
+  type: ClusterIP
+  port: 80
+  targetPort: http
+  portProtocol: TCP
+  portname: http
+
+deployment:
+  enabled: true
+  apiVersion: apps/v1
+  replicaCount: 1
+  strategy: RollingUpdate
+  image:
+    repository: docker.eks.minlab.com/repository/docker-registry/petclinic
+    tag: latest
+    pullPolicy: Always
+    imagePullSecrets:
+    - name: nexus-repo-config
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ingress:
+  enabled: true
+  apiVersion: extensions/v1beta1
+  annotations:
+    external-dns.alpha.kubernetes.io/target: traefik.eks.minlab.com
+    kubernetes.io/ingress.class: traefik
+  hosts:
+    - host: petclinicrest.eks.minlab.com
+      paths:
+      - /
+
+  tls: []
+  #- secretName: chart-example-tls
+  #  hosts:
+  #    - chart-example.local

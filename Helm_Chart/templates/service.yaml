@@ -1,0 +1,18 @@
+{{- if .Values.service.enabled -}}
+apiVersion: {{ .Values.service.apiVersion }}
+kind: Service
+metadata:
+  name: {{ include "petclinic_rest.fullname" . }}
+  labels:
+{{ include "petclinic_rest.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.portProtocol }}
+      name: {{ .Values.service.portname }}
+  selector:
+    app.kubernetes.io/name: {{ include "petclinic_rest.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
