@@ -101,16 +101,19 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             container('docker') {
               stage('Docker Build') {
                   sh '''
-                  apk --update add curl
-                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/spring-petclinic-angular-8.0.1.tgz --output spring-petclinic-angular-8.0.1.tgz
-                  docker build -t petclinic_front:latest .
+                  apk --update add curl bash
+                  bash 
+                  appName=$(grep "name" package.json | awk -F\" '{print $4}')
+                  appVersion=$(grep "version" package.json | awk -F\" '{print $4}')
+                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/${appName}-${appVersion}.tgz --output ${appName}-${appVersion}.tgz
+                  docker build -t ${appName}:latest .
                   '''
               }
               stage('Docker tag and push') {
                   sh '''
-                  tag_nexus=$(date +%s) && docker tag petclinic_front:latest docker.eks.minlab.com/repository/docker-registry/petclinic_front:${tag_nexus}
+                  tag_nexus=$(date +%s) && docker tag ${appName}:latest docker.eks.minlab.com/repository/docker-registry/${appName}:${tag_nexus}
                   docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
-                  docker push docker.eks.minlab.com/repository/docker-registry/petclinic_front:${tag_nexus}
+                  docker push docker.eks.minlab.com/repository/docker-registry/${appName}:${tag_nexus}
                   '''
               }
             }
