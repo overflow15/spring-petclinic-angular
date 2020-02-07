@@ -101,11 +101,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             container('docker') {
               stage('installing DinD dependencies') {
                   sh '''
-                  apk --update add curl bash
-                  '''
-              }
-              stage('Building Docker') {
-                  sh '''#!/bin/bash
+                  apk --update add curl
                   appName=$(grep "name" package.json | awk -F\" '{print $4}')
                   appVersion=$(grep "version" package.json | awk -F\" '{print $4}')
                   curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/spring-petclinic-angular/-/${appName}-${appVersion}.tgz --output ${appName}-${appVersion}.tgz
