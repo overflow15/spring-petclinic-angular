@@ -99,7 +99,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
         }
         stage('DinD') {
             container('docker') {
-              stage() {
+              stage('installing DinD dependencies') {
                   sh '''
                   apk --update add curl bash
                   '''
