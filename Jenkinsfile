@@ -110,6 +110,8 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               }
               stage('Docker tag and push') {
                   sh '''
+                  appName=$(grep "name" package.json | awk -F'"' '{print $4}')
+                  appVersion=$(grep "version" package.json | awk -F'"' '{print $4}')
                   tag_nexus=$(date +%s) && docker tag $appName:latest docker.eks.minlab.com/repository/docker-registry/$appName:${tag_nexus}
                   docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
                   docker push docker.eks.minlab.com/repository/docker-registry/$appName:${tag_nexus}
