@@ -119,5 +119,16 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               }
             }
         }
+        stage('Deploy') {
+            container('helm') {
+              stage('Helm upgrade') {
+                  sh '''#!/bin/bash
+                  appName=$(grep "name" package.json | awk -F'"' '{print $4}')
+                  image_tag=$(curl -u admin:$(echo -ne $NEXUS_ADMIN_PASS) -X GET http://nexus.eks.minlab.com/service/rest/v1/search/ | grep path | grep docker | awk -F'"' '{print $4}' | grep ${appName} | awk -F/ '{print $6}' | sort -nr | head -1)
+                  helm upgrade --install --force petclinic-rest --set-string deployment.image.tag=$(echo $image_tag) -f Helm_Chart/values.yaml Helm_Chart/. --tiller-namespace cicd-tools --namespace cicd-tools
+                  '''
+              }
+            }
+        }
     }
 }
