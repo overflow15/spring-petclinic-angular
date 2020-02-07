@@ -39,7 +39,7 @@ ingress:
     external-dns.alpha.kubernetes.io/target: traefik.eks.minlab.com
     kubernetes.io/ingress.class: traefik
   hosts:
-    - host: petclinicrest.eks.minlab.com
+    - host: petclinicfront.eks.minlab.com
       paths:
       - /
 
