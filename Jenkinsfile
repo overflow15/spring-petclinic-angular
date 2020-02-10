@@ -91,6 +91,9 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   #sed -i "s/application_version/$(grep "version" package.json | awk -F\" '{print $4}')/g" sonar-project.properties
                   npm install -D sonarqube-scanner
                   npm run sonar
+                  taskID=$(curl $(tail -1 .scannerwork/report-task.txt | cut -d '=' -f2-3) |  cut -d ',' -f7 | cut -d ':' -f2 | cut -d '"' -f2)
+                  status=$(curl -u ${SONAR_USER}:${SONAR_PASS} @${SONAR_URL}/api/qualitygates/project_status?analysisId=${taskID} | cut -d ',' -f1 |  cut -d '"' -f6)
+                  if [ "$status" != "OK" ]; then exit 1; fi
                   '''
               }
             }
