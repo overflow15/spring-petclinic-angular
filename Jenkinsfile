@@ -92,7 +92,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   npm install -D sonarqube-scanner
                   npm run sonar
                   taskID=$(curl $(tail -1 .scannerwork/report-task.txt | cut -d '=' -f2-3) |  cut -d ',' -f7 | cut -d ':' -f2 | cut -d '"' -f2)
-                  while [ "$taskID" = "IN_PROGRESS"]; do taskID=$(curl $(tail -1 .scannerwork/report-task.txt | cut -d '=' -f2-3) |  cut -d ',' -f7 | cut -d ':' -f2 | cut -d '"' -f2); done
+                  while [ "$taskID" = "IN_PROGRESS" ] || [ "$taskID" = "PENDING" ]; do sleep 5; taskID=$(curl $(tail -1 .scannerwork/report-task.txt | cut -d '=' -f2-3) |  cut -d ',' -f7 | cut -d ':' -f2 | cut -d '"' -f2); done
                   echo $taskID
                   status=$(curl -u ${SONAR_USER}:${SONAR_PASS} ${SONAR_URL}/api/qualitygates/project_status?analysisId=${taskID} | cut -d ',' -f1 |  cut -d '"' -f6)
                   echo $status
