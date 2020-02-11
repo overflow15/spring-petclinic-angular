@@ -122,6 +122,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   appVersion=$(grep "version" package.json | awk -F'"' '{print $4}')
                   apk --update add curl
                   curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/$appName/-/$appName-$appVersion.tgz --output $appName-$appVersion.tgz
+                  sed -i "s/application_package/$appName-$appVersion.tgz/g"
                   docker build -t ${appName}:latest .
                   '''
               }
