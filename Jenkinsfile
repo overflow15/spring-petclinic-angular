@@ -57,6 +57,18 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             envVars: [
                 secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
             ]
+    ),
+    containerTemplate(
+            name: 'selenium',
+            image: 'selenium/standalone-chrome:3.141.59',
+            ttyEnabled: true,
+            resourceLimitCpu: '400m',
+            resourceLimitMemory: '512Mi',
+            resourceRequestCpu: '200m',
+            resourceRequestMemory: '256Mi',
+            envVars: [
+                secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
+            ]
     )
     ]
 )
