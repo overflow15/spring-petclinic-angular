@@ -103,11 +103,12 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''
                   python3 -m pip install influxdb
                   apk --update add git less openssh
+                  appName=$(grep "name" package.json | cut -d '"' -f4)
                   cd /tmp && git clone https://github.com/overflow15/sonarqube-influxdb.git
                   cd sonarqube-influxdb
                   echo "sonarUser="$SONAR_USER >> python/application.properties
                   echo "sonarCredentials="$SONAR_PASS >> python/application.properties
-                  python python/qamera.py python/application.properties spring-petclinic-angular
+                  python python/qamera.py python/application.properties ${appName}
                   '''
               }
             }
