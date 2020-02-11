@@ -141,9 +141,9 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''
                   appName=$(grep "name" package.json | awk -F'"' '{print $4}')
                   appVersion=$(grep "version" package.json | awk -F'"' '{print $4}')
-                  tag_nexus=$(date +%s) && docker tag $appName:latest docker.eks.minlab.com/repository/docker-registry/$appName:${tag_nexus}
+                  docker tag $appName:latest docker.eks.minlab.com/repository/docker-registry/$appName:${appVersion}
                   docker login http://docker.eks.minlab.com -uadmin -p$(echo -ne $NEXUS_ADMIN_PASS)
-                  docker push docker.eks.minlab.com/repository/docker-registry/$appName:${tag_nexus}
+                  docker push docker.eks.minlab.com/repository/docker-registry/$appName:${appVersion}
                   '''
               }
             }
@@ -153,8 +153,8 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               stage('Helm upgrade') {
                   sh '''#!/bin/bash
                   appName=$(grep "name" package.json | awk -F'"' '{print $4}')
-                  image_tag=$(curl -u admin:$(echo -ne $NEXUS_ADMIN_PASS) -X GET http://nexus.eks.minlab.com/service/rest/v1/search/ | grep path | grep docker | awk -F'"' '{print $4}' | grep ${appName} | awk -F/ '{print $6}' | sort -nr | head -1)
-                  helm upgrade --install --force ${appName} --set-string deployment.image.tag=$(echo $image_tag) --set-string deployment.image.repository="docker.eks.minlab.com/repository/docker-registry/$appName" -f Helm_Chart/values.yaml Helm_Chart/. --tiller-namespace cicd-tools --namespace cicd-tools
+                  appVersion=$(grep "version" package.json | awk -F'"' '{print $4}')
+                  helm upgrade --install --force ${appName} --set-string deployment.image.tag=$(echo $appVersion) --set-string deployment.image.repository="docker.eks.minlab.com/repository/docker-registry/$appName" -f Helm_Chart/values.yaml Helm_Chart/. --tiller-namespace cicd-tools --namespace cicd-tools
                   '''
               }
             }
