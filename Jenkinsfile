@@ -182,6 +182,8 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
                   '''
               }
+            }
+        }
         stage('Selenium Tests') {
             container('jdk') {
               stage('Selenium Tests') {
