@@ -200,12 +200,12 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                  
                   curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/maven-metadata.xml --output baseVersion.xml
                   
-                  TEMP_VERSION=`grep \<version\> ./baseVersion.xml `
+                  TEMP_VERSION=$(grep "<version>" ./baseVersion.xml)
                   BASE_VERSION=$(echo "${TEMP_VERSION}" | sed -e 's/<version>\(.*\)<\/version>/\1/' | sed -e 's/ //g')
                   
                   curl 'http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/'${BASE_VERSION}'/maven-metadata.xml' --output artifactVersion.xml
                   
-                  TEMP_VERSION=`grep -m 1 \<value\> ./artifactVersion.xml`
+                  TEMP_VERSION=$(grep -m 1 "<value>" ./artifactVersion.xml)
                   FINAL_VERSION=$(echo "${TEMP_VERSION}" | sed -e 's/<value>\(.*\)<\/value>/\1/' | sed -e 's/ //g')
                   
                   curl 'http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/'${BASE_VERSION}'/spring-petclinic-rest-'${FINAL_VERSION}'.jar' --output  'spring-petclinic-rest-'${FINAL_VERSION}'.jar'
