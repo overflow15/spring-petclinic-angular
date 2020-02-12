@@ -62,6 +62,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             name: 'maven',
             image: 'maven:3.6.3-jdk-8',
             ttyEnabled: true,
+            command: 'cat',
             resourceLimitCpu: '400m',
             resourceLimitMemory: '512Mi',
             resourceRequestCpu: '200m',
