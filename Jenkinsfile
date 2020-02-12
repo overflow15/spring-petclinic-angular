@@ -175,11 +175,11 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''#!/bin/bash
                   apk --update add git
                   git clone https://bitbucket.org/afernalc/webdrivertest.git && cd webdrivertest
-				  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   groupID=$(grep "groupId" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
-				  mvn clean install
-				  mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
+                  mvn clean install
+                  mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
                   '''
               }
         stage('Selenium Tests') {
@@ -188,11 +188,11 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   sh '''
                   apk --update add git
                   git clone https://bitbucket.org/afernalc/webdrivertest.git && cd webdrivertest
-				  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
                   echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
-				  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/$(echo ${groupID} | cut -d '.' -f1)/$(echo ${groupID} | cut -d '.' -f2)/$(echo ${groupID} | cut -d '.' -f3)/${appName}/${appVersion}/${appName}-${appVersion}.jar --output ${appName}-${appVersion}.jar
+                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/$(echo ${groupID} | cut -d '.' -f1)/$(echo ${groupID} | cut -d '.' -f2)/$(echo ${groupID} | cut -d '.' -f3)/${appName}/${appVersion}/${appName}-${appVersion}.jar --output ${appName}-${appVersion}.jar
                   java -Dproperties_file="data/mytest.properties" ${appName}-${appVersion}.jar testlauncher.seleniumtest.TestLauncher
                   '''
               }
