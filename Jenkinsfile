@@ -59,16 +59,26 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             ]
     ),
     containerTemplate(
-            name: 'selenium',
-            image: 'selenium/standalone-chrome:3.141.59',
+            name: 'maven',
+            image: 'maven:3.6.3-jdk-8',
             ttyEnabled: true,
             resourceLimitCpu: '400m',
             resourceLimitMemory: '512Mi',
             resourceRequestCpu: '200m',
             resourceRequestMemory: '256Mi',
             envVars: [
-                secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
-            ]
+			    secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
+			]
+    ),
+    containerTemplate(
+            name: 'jdk',
+            image: 'openjdk:8-jre-alpine',
+            ttyEnabled: true,
+            resourceLimitCpu: '400m',
+            resourceLimitMemory: '512Mi',
+            resourceRequestCpu: '200m',
+            resourceRequestMemory: '256Mi',
+            envVars: []
     )
     ]
 )
@@ -155,6 +165,35 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   appName=$(grep "name" package.json | awk -F'"' '{print $4}')
                   appVersion=$(grep "version" package.json | awk -F'"' '{print $4}')
                   helm upgrade --install --force ${appName} --set-string deployment.image.tag=$(echo $appVersion) --set-string deployment.image.repository="docker.eks.minlab.com/repository/docker-registry/$appName" -f Helm_Chart/values.yaml Helm_Chart/. --tiller-namespace cicd-tools --namespace cicd-tools
+                  '''
+              }
+            }
+        }
+        stage('Compiling Selenium') {
+            container('maven') {
+              stage('Compiling Selenium') {
+                  sh '''#!/bin/bash
+                  apk --update add git
+                  git clone https://bitbucket.org/afernalc/webdrivertest.git && cd webdrivertest
+				  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  groupID=$(grep "groupId" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+				  mvn clean install
+				  mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
+                  '''
+              }
+        stage('Selenium Tests') {
+            container('jdk') {
+              stage('Selenium Tests') {
+                  sh '''
+                  apk --update add git
+                  git clone https://bitbucket.org/afernalc/webdrivertest.git && cd webdrivertest
+				  appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
+                  echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
+                  echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
+				  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/$(echo ${groupID} | cut -d '.' -f1)/$(echo ${groupID} | cut -d '.' -f2)/$(echo ${groupID} | cut -d '.' -f3)/${appName}/${appVersion}/${appName}-${appVersion}.jar --output ${appName}-${appVersion}.jar
+                  java -Dproperties_file="data/mytest.properties" ${appName}-${appVersion}.jar testlauncher.seleniumtest.TestLauncher
                   '''
               }
             }
