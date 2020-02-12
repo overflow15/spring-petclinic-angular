@@ -194,22 +194,10 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   groupID=$(grep "groupId" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
-                 
+                  snapshotVersion=$(curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/maven-metadata.xml | grep -m 1 "<value>" | cut -d '>' -f2 | cut -d '<' -f1)
                   echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
                   echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
-                 
-                  curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/maven-metadata.xml --output baseVersion.xml
-                  
-                  TEMP_VERSION=$(grep "<version>" ./baseVersion.xml)
-                  BASE_VERSION=$(echo "${TEMP_VERSION}" | sed -e 's/<version>\(.*\)<\/version>/\1/' | sed -e 's/ //g')
-                  
-                  curl 'http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/'${BASE_VERSION}'/maven-metadata.xml' --output artifactVersion.xml
-                  
-                  TEMP_VERSION=$(grep -m 1 "<value>" ./artifactVersion.xml)
-                  FINAL_VERSION=$(echo "${TEMP_VERSION}" | sed -e 's/<value>\(.*\)<\/value>/\1/' | sed -e 's/ //g')
-                  
-                  curl 'http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/org/springframework/samples/spring-petclinic-rest/'${BASE_VERSION}'/spring-petclinic-rest-'${FINAL_VERSION}'.jar' --output  'spring-petclinic-rest-'${FINAL_VERSION}'.jar'
-                  
+                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/${appName}/-/${appName}-${snapshotVersion}.tgz --output ${appName}-${appVersion}.tgz
                   java -Dproperties_file="data/mytest.properties" -classpath ${appName}-${appVersion}.jar testlauncher.seleniumtest.TestLauncher
                   '''
               }
