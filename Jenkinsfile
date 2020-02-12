@@ -189,7 +189,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
               stage('Selenium Tests') {
                   sh '''
                   apk --update add git
-                  git clone https://bitbucket.org/afernalc/webdrivertest.git && cd webdrivertest
+                  cd webdrivertest
                   appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
