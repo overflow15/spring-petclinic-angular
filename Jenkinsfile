@@ -181,7 +181,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   groupID=$(grep "groupId" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   mvn clean install
-                  mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
+                  mvn deploy:deploy-file -Dmaven.test.skip=true -Durl=http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/ -Dfile=target/${appName}-${appVersion}-jar-with-dependencies.jar -Dpackaging=jar -DgroupId=${groupID} -DartifactId=${appName} -Dversion=${appVersion}
                   '''
               }
             }
