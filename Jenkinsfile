@@ -64,9 +64,9 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
             ttyEnabled: true,
             command: 'cat',
             resourceLimitCpu: '400m',
-            resourceLimitMemory: '512Mi',
+            resourceLimitMemory: '1024Mi',
             resourceRequestCpu: '200m',
-            resourceRequestMemory: '256Mi',
+            resourceRequestMemory: '512Mi',
             envVars: [
 			    secretEnvVar(key: 'NEXUS_ADMIN_PASS', secretName: 'nexus-petclinic', secretKey: 'password')
 			]
