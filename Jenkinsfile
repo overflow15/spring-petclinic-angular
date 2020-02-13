@@ -200,8 +200,8 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
                   curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/${appName}-${snapshotVersion}.jar --output ${appName}-${appVersion}.jar
                   java -Dproperties_file="data/mytest.properties" -classpath ${appName}-${appVersion}.jar testlauncher.seleniumtest.TestLauncher
-                  testKO=$(grep "TESTS EXECUTION KO" testFile.log | wc -l)
-                  echo $testKO": KO"
+                  testKO=$(grep 'TESTS EXECUTION KO' testFile.log | wc -l)
+                  echo "testKO: "$testKO
                   if [ "$testKO" -eq 1 ]; then exit 1; fi
                   '''
               }
