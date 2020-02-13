@@ -197,7 +197,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   snapshotVersion=$(curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/maven-metadata.xml | grep -m 1 "<value>" | cut -d '>' -f2 | cut -d '<' -f1)
                   echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
                   echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
-                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/npm/${appName}/-/${appName}-${snapshotVersion}.tgz --output ${appName}-${appVersion}.tgz
+                  curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/${appName}-${snapshotVersion}.jar --output ${appName}-${appVersion}.tgz
                   java -Dproperties_file="data/mytest.properties" -classpath ${appName}-${appVersion}.jar testlauncher.seleniumtest.TestLauncher
                   '''
               }
