@@ -193,7 +193,7 @@ podTemplate(label: 'jnlp-petclinic-front', serviceAccount: 'jenkins', slaveConne
                   appName=$(grep artifactId pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   groupID=$(grep "groupId" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
                   appVersion=$(grep "<version>" pom.xml | head -1 | cut -d '>' -f2 | cut -d '<' -f1)
-                  snapshotVersion=$(curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/maven-metadata.xml | grep -m 1 "<value>" | cut -d '>' -f2 | cut -d '<' -f1)
+                  snapshotVersion=$(echo $(curl http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/maven-metadata.xml | grep -m 1 "<value>") | cut -d '>' -f2 | cut -d '<' -f1)
                   echo "webdriver_URL=http://selenium.eks.minlab.com/wd/hub" > data/mytest.properties
                   echo "XLSfilename=data/DATOS_TEST_1.xlsx" >> data/mytest.properties
                   curl -X GET http://admin:$(echo -ne $NEXUS_ADMIN_PASS)@nexus.eks.minlab.com/repository/maven-snapshots/${groupID}/${appName}/${appVersion}/${appName}-${snapshotVersion}.jar --output ${appName}-${appVersion}.tgz
